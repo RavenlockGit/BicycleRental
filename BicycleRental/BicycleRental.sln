@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BicycleRental.Server", "BicycleRental\Server\BicycleRental.Server.csproj", "{CFEF235C-F3B5-43EB-9767-3469AD7B58B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BicycleRental.Server", "BicycleRental\Server\BicycleRental.Server.csproj", "{CFEF235C-F3B5-43EB-9767-3469AD7B58B7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BicycleRental.Client", "BicycleRental\Client\BicycleRental.Client.csproj", "{AF284449-BBAF-4B84-B3AB-C1EA1AD1A8EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BicycleRental.Client", "BicycleRental\Client\BicycleRental.Client.csproj", "{AF284449-BBAF-4B84-B3AB-C1EA1AD1A8EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BicycleRental.Shared", "BicycleRental\Shared\BicycleRental.Shared.csproj", "{DBFAB726-D5E0-4894-8A2F-14EC072C368B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BicycleRental.Shared", "BicycleRental\Shared\BicycleRental.Shared.csproj", "{DBFAB726-D5E0-4894-8A2F-14EC072C368B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

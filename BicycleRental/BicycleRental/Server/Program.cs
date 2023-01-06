@@ -1,4 +1,4 @@
-using BicycleRental.Server;
+using BicycleRental.Server.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace BicycleRental

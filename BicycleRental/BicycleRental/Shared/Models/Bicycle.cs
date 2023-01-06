@@ -24,7 +24,6 @@ namespace BicycleRental.Shared.Models
 
         //User can upload max 4 pictures
 
-        [Required]
         public byte[]? FrontPicture { get; set; }
         public byte[]? Picture2 { get; set; }
         public byte[]? Picture3 { get; set; }
