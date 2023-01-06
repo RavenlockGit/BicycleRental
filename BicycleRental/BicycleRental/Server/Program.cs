@@ -1,4 +1,5 @@
-using Microsoft.AspNetCore.ResponseCompression;
+using BicycleRental.Server;
+using Microsoft.EntityFrameworkCore;
 
 namespace BicycleRental
 {
@@ -12,6 +13,20 @@ namespace BicycleRental
 
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
+
+            //todo remove
+            //todo move somewhere else
+            //var dbName = "testdb.db";
+            //if (File.Exists(dbName))
+            //{
+            //    File.Delete(dbName);
+            //}
+
+            builder.Services.AddDbContext<DataContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            });
+                    
 
             var app = builder.Build();
 
