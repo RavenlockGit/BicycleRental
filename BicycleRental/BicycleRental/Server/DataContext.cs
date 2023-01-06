@@ -8,5 +8,6 @@ namespace BicycleRental.Server
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
         public DbSet<Bicycle> Bicycle { get; set; }
+        public DbSet<Reservation> Reservation { get; set; }
     }
 }

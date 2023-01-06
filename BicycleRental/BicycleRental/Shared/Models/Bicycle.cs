@@ -17,7 +17,8 @@ namespace BicycleRental.Shared.Models
         public string? Brand { get; set; }
         public int GearCount { get; set; }
         public int TireSize { get; set; }
-        public decimal PrizePerDay { get; set; }
+
+        public double PrizePerDay { get; set; }
 
         public BikeType Type { get; set; }
 

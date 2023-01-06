@@ -2,8 +2,10 @@
 {
     public class Reservation
     {
-        public int UserId { get; set; }
+        public int Id { get; set; }
+        //public int UserId { get; set; }
         public int BicycleId { get; set; }
+        public Bicycle? Bicycle { get; set; }
 
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
