@@ -1,6 +1,8 @@
 using BicycleRental.Client;
+using BicycleRental.Client.Repositories;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using System.Net.Http;
 
 namespace BicycleRental.Client
 {
@@ -12,7 +14,14 @@ namespace BicycleRental.Client
             builder.RootComponents.Add<App>("#app");
             builder.RootComponents.Add<HeadOutlet>("head::after");
 
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            builder.Services.AddHttpClient("public-client", client =>
+            {
+                client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
+                client.Timeout = TimeSpan.FromSeconds(300);
+            });
+
+            builder.Services.AddScoped<BicycleRepository>();
+            builder.Services.AddScoped<ReservationRepository>();
 
             await builder.Build().RunAsync();
         }

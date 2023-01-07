@@ -10,6 +10,7 @@ internal class BicycleSeeder: ISeeder<Bicycle>
     }
 
     //Randomly generating bikes using Bogus (obviously)
+    //https://github.com/bchavez/Bogus
     public List<Bicycle> Generate(int maxAmount)
     {
         List<Bicycle> bicycleList = new Faker<Bicycle>()

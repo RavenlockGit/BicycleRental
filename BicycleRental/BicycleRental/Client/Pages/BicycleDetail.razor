@@ -1,0 +1,25 @@
+@page "/BicycleDetail/{bicycleId}"
+@using BicycleRental.Client.Repositories;
+@using BicycleRental.Shared.Models;
+
+<h1>This @BicycleId</h1>
+
+<h2>This @_bicycle.Name</h2>
+
+
+@code {
+    [Parameter]
+    public string BicycleId { get; set; }
+
+    private Bicycle _bicycle = new Bicycle();
+
+    [Inject]
+    private BicycleRepository bicycleRepository { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        _bicycle = await bicycleRepository.Details(int.Parse(BicycleId));
+    }
+}

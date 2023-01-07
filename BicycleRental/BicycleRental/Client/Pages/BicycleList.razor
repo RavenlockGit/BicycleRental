@@ -1,0 +1,14 @@
+@using BicycleRental.Shared.Models;
+
+
+@foreach (var bicycle in Bicycle)
+{
+    <BicycleRow Bicycle="bicycle" />
+}
+
+@code {
+
+    [Parameter]
+    public List<Bicycle> Bicycle { get; set; }
+
+}
