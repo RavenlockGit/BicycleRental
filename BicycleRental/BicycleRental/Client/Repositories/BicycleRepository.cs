@@ -1,5 +1,6 @@
 ﻿using BicycleRental.Shared.Models;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace BicycleRental.Client.Repositories
 {
@@ -7,14 +8,14 @@ namespace BicycleRental.Client.Repositories
     {
 
         private HttpClient _httpClient;
-        private System.Text.Json.JsonSerializerOptions _jsonSerializerOptions;
+        private JsonSerializerOptions _jsonSerializerOptions;
         public BicycleRepository(IHttpClientFactory httpClientFactory)
         {
             _httpClient = httpClientFactory.CreateClient("public-client");
-            _jsonSerializerOptions = new System.Text.Json.JsonSerializerOptions()
+            _jsonSerializerOptions = new JsonSerializerOptions()
             {
                 ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
-                PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             };
         }
 
@@ -31,9 +32,7 @@ namespace BicycleRental.Client.Repositories
         public async Task<Bicycle> Details(int id)
         {
             string requestUrl = $"api/Bicycles/Details/{id}";
-
-            var a = await _httpClient.GetFromJsonAsync<Bicycle>(requestUrl, _jsonSerializerOptions);
-            return a;
+            return await _httpClient.GetFromJsonAsync<Bicycle>(requestUrl, _jsonSerializerOptions);
         }
 
         public Task Edit(int id, Bicycle bicycle)

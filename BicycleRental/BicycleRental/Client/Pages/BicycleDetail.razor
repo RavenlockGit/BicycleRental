@@ -2,9 +2,23 @@
 @using BicycleRental.Client.Repositories;
 @using BicycleRental.Shared.Models;
 
-<h1>This @BicycleId</h1>
-
-<h2>This @_bicycle.Name</h2>
+<h2>@_bicycle.Name</h2>
+<p>
+    <label style="font-size:20px"><span style="font-weight:700">Brand:</span> @_bicycle.Brand</label>
+    <br />
+    <label style="font-size:20px"><span style="font-weight:700">Type:</span> @_bicycle.Type</label>
+    <br />
+    <label style="font-size:20px"><span style="font-weight:700">Place:</span> @_bicycle.Place</label>
+    <br />
+    <label style="font-size:20px"><span style="font-weight:700">Region:</span> @_bicycle.Region</label>
+    <br />
+    <label style="font-size:20px"><span style="font-weight:700">GearCount:</span> @_bicycle.GearCount</label>
+    <br />
+    <label style="font-size:20px"><span style="font-weight:700">TireSize:</span> @_bicycle.TireSize</label>
+    <br />
+    <br />
+    <h3>Prize per Day: @_bicycle.PrizePerDay</h3>
+</p>
 
 
 @code {
@@ -12,14 +26,15 @@
     public string BicycleId { get; set; }
 
     private Bicycle _bicycle = new Bicycle();
+    private List<Reservation> _reservations = new();
 
     [Inject]
-    private BicycleRepository bicycleRepository { get; set; }
+    private BicycleRepository _bicycleRepository { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
 
-        _bicycle = await bicycleRepository.Details(int.Parse(BicycleId));
+        _bicycle = await _bicycleRepository.Details(int.Parse(BicycleId));
     }
 }

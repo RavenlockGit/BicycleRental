@@ -17,10 +17,10 @@ namespace BicycleRental.Server.Controllers
         }
 
         // GET: Reservations
-        [HttpGet]
-        public async Task<IActionResult> Index()
+        [HttpGet, Route("{bicycleId}")]
+        public async Task<IActionResult> Index(int bicycleId)
         {
-            return Ok(await _context.Reservation.ToListAsync());
+            return Ok(await _context.Reservation.Where(x => x.BicycleId == bicycleId).ToListAsync());
         }
 
         // GET: Reservations/Details/5
@@ -47,15 +47,30 @@ namespace BicycleRental.Server.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost, Route("Create")]
         //[ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Place,Region,Brand,GearCount,TireSize,PrizePerDay,Type,FrontPicture,Picture2,Picture3,Picture4")] Reservation reservation)
+        public async Task<IActionResult> Create([Bind("Id,BicycleId, StartDate, EndDate")] Reservation reservation)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && await CheckTimeSpan(reservation))
             {
                 _context.Add(reservation);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return Ok(reservation);
             }
-            return Ok(reservation);
+            return BadRequest(reservation);
+        }
+
+        private async Task<bool> CheckTimeSpan(Reservation reservation)
+        {
+            var allReservations = await _context.Reservation.Where(x => x.BicycleId == reservation.BicycleId).ToListAsync();
+            bool noOverlap = true;
+
+            foreach (var res in allReservations)
+            {
+                if (reservation.StartDate.Date <= res.EndDate.Date && res.StartDate.Date <= reservation.EndDate.Date)
+                {
+                    noOverlap = false;
+                }
+            }
+            return noOverlap;
         }
 
         // POST: Reservations/Edit/5

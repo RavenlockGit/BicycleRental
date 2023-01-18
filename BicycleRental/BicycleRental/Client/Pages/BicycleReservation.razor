@@ -1,0 +1,135 @@
+@page "/BicycleReservation/{bicycleId}"
+@using BicycleRental.Client.Repositories;
+@using BicycleRental.Shared.Models;
+@using BlazorDateRangePicker
+@inject NavigationManager NavigationManager
+
+<h2>@_bicycle.Name</h2>
+<p>
+    <div style="font-size:20px"><b>Brand:</b> @_bicycle.Brand</div>
+    <br />
+    <div style="font-size:20px"><b>Type:</b> @_bicycle.Type</div>
+    <br />
+    <div style="font-size:20px"><b>Place:</b> @_bicycle.Place</div>
+    <br />
+    <div style="font-size:20px"><b>Region:</b> @_bicycle.Region</div>
+    <br />
+    <br />
+    <h3>Prize per Day: @_bicycle.PrizePerDay</h3>
+</p>
+
+<h2>Reservation</h2>
+<div style="width:300px">
+    <div>
+        <h3> Von:</h3>
+        <EditForm Model="@_reservation">
+            <InputDate @bind-Value="_reservation.StartDate" />
+        </EditForm>
+    </div>
+
+    <div>
+        <h3> Bis:</h3>
+        <EditForm Model="@_reservation">
+            <InputDate @bind-Value="_reservation.EndDate" />
+        </EditForm>
+    </div>
+</div>
+
+<br />
+
+<button @onclick="ReservationButtonClicked">Reservate Bike</button>
+
+<label style="color:red">@_errorMsg</label>
+
+<h3>Current Reservations:</h3>
+@foreach (var a in _reservations)
+{
+    <h4>@a.StartDate.ToString("dd/MM/yyyy") - @a.EndDate.ToString("dd/MM/yyyy")</h4>
+}
+
+
+@code {
+    [Parameter]
+    public string BicycleId { get; set; }
+
+    private string _errorMsg = string.Empty;
+
+    public Reservation _reservation { get; set; } = new Reservation()
+        {
+            StartDate = DateTime.Now,
+            EndDate = DateTime.Now.AddDays(1)
+        };
+
+    private Bicycle _bicycle = new Bicycle();
+    private List<Reservation> _reservations = new();
+
+
+    [Inject]
+    private BicycleRepository _bicycleRepository { get; set; }
+
+    [Inject]
+    private ReservationRepository _reservationRepository { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        _bicycle = await _bicycleRepository.Details(int.Parse(BicycleId));
+
+        _reservations = await InitReservationList();
+    }
+
+    private async Task<List<Reservation>> InitReservationList()
+    {
+        var tmpList = await _reservationRepository.Index(int.Parse(BicycleId));
+        if (tmpList == null)
+        {
+            return new List<Reservation>();
+        }
+
+        return (tmpList).ToList();
+    }
+
+    private async void ReservationButtonClicked(MouseEventArgs args)
+    {
+        if (!CheckTimeSpanOverlap())
+        {
+            _errorMsg = "Reservation dates overlap existing reservations!"; 
+            return;
+        }
+        if (!CheckTimeSpanOrder())
+        {
+            _errorMsg = "Reservations end date is before start date.";
+            return;
+        }
+
+        _reservation.BicycleId = int.Parse(BicycleId);
+        _errorMsg = await _reservationRepository.Create(_reservation);
+
+        if (string.IsNullOrEmpty(_errorMsg))
+        {
+            NavigationManager.NavigateTo($"/");
+        }
+
+        StateHasChanged();
+    }
+
+    private bool CheckTimeSpanOverlap()
+    {
+        bool noOverlap = true;
+
+        foreach (var res in _reservations)
+        {
+            if (_reservation.StartDate.Date <= res.EndDate.Date && res.StartDate.Date <= _reservation.EndDate.Date)
+            {
+                noOverlap = false;
+            }
+        }
+        return noOverlap;
+    }
+
+    private bool CheckTimeSpanOrder()
+    {
+        return _reservation.StartDate.Date <= _reservation.EndDate.Date;
+    }
+}

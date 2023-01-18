@@ -17,7 +17,7 @@ internal class ReservationSeeder : ISeeder<Reservation>
             .RuleFor(reservation => reservation.BicycleId, faker => faker.Random.Int(0, maxAmount)+1)
 
             .RuleFor(reservation => reservation.StartDate, faker => faker.Date.Between(DateTime.Now, DateTime.Now.AddDays(10)))
-            .RuleFor(reservation => reservation.StartDate, faker => faker.Date.Between(DateTime.Now.AddDays(11), DateTime.Now.AddDays(20)))
+            .RuleFor(reservation => reservation.EndDate, faker => faker.Date.Between(DateTime.Now.AddDays(11), DateTime.Now.AddDays(20)))
             .Generate(maxAmount);
         return reservationList;
 

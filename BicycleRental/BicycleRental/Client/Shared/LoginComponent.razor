@@ -1,0 +1,15 @@
+﻿<AuthorizeView>
+    <Authorized>
+        @*<a href="authentication/profile">Hello, @context.User.Identity?.Name!</a>
+        <button class="nav-link btn btn-link" @onclick="BeginLogOut">Log out</button>*@
+        <div>hello xyz</div>
+    </Authorized>
+    <NotAuthorized>
+       @* <a href="authentication/register">Register</a>*@
+        <a href="authentication/login">Log in</a>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+
+}

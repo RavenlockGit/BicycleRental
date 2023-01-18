@@ -1,12 +1,37 @@
 ﻿using BicycleRental.Shared.Models;
+using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace BicycleRental.Client.Repositories
 {
     public class ReservationRepository
     {
-        public Task Create(Bicycle bicycle)
+        private HttpClient _httpClient;
+        private JsonSerializerOptions _jsonSerializerOptions;
+        public ReservationRepository(IHttpClientFactory httpClientFactory)
         {
-            throw new NotImplementedException();
+            _httpClient = httpClientFactory.CreateClient("public-client");
+            _jsonSerializerOptions = new JsonSerializerOptions()
+            {
+                ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            };
+        }
+
+        public async Task<string> Create(Reservation reservation)
+        {
+            string requestUrl = $"api/Reservations/Create";
+
+            var res = await _httpClient.PostAsJsonAsync(requestUrl, reservation, _jsonSerializerOptions);
+            if (!res.IsSuccessStatusCode)
+            {
+                return res.StatusCode.ToString();
+            }
+            else
+            {
+                return string.Empty;
+            }
+
         }
 
         public Task Delete(int id)
@@ -24,9 +49,10 @@ namespace BicycleRental.Client.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<Reservation[]> Index()
+        public async Task<Reservation[]> Index(int bicycleId)
         {
-            throw new NotImplementedException();
+            string requestUrl = $"api/Reservations/{bicycleId}";
+            return await _httpClient.GetFromJsonAsync<Reservation[]>(requestUrl, _jsonSerializerOptions);
         }
     }
 }
