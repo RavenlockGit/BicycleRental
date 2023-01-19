@@ -1,36 +1,24 @@
 @using BicycleRental.Shared.Models;
 @inject NavigationManager NavigationManager
 
-@using Microsoft.AspNetCore.Authorization
-
-
 <p>
     <text>@Bicycle.Id - @Bicycle.Name (@(Bicycle.Brand))</text>
 
     <button @onclick="DetailsButtonClicked">Details</button>
-    <button @onclick="ReservateButtonClicked">Reservate</button>
+
+    <AuthorizeView>
+        <Authorized>
+            <button @onclick="ReservateButtonClicked">Reservate</button>
+        </Authorized>
+    </AuthorizeView>
 </p>
 
 
 
 @code {
-    //private bool _isEdit = false;
-    //private KiddyBlazor.Shared.Artikel _localArtikel;
-
-
 
     [Parameter]
     public Bicycle Bicycle { get; set; }
-
-    //[Parameter]
-    //public EventCallback<KiddyBlazor.Shared.Artikel> ArtikelChanged { get; set; }
-
-
-    //[Parameter]
-    //public EventCallback<int> ArtikelDeleted { get; set; }
-
-
-
 
     private void DetailsButtonClicked(MouseEventArgs args)
     {
@@ -42,14 +30,4 @@
     {
         NavigationManager.NavigateTo($"/BicycleReservation/{Bicycle.Id}");
     }
-
-    //private async Task OkButtonClicked(MouseEventArgs args)
-    //{
-    //    Artikel.ArtikelName = _localArtikel.ArtikelName;
-    //    Artikel.GewichtInGramm = _localArtikel.GewichtInGramm;
-    //    _isEdit = false;
-
-    //    await ArtikelChanged.InvokeAsync(Artikel);
-    //}
-
 }

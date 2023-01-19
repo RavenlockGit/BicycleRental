@@ -4,13 +4,61 @@
 
 <PageTitle>Index</PageTitle>
 
-<h1>Hello there!</h1>
+<h1>Hello There!</h1>
+
+<LoginComponent />
 
 Welcome to your best and most liked bike rental place.
+<div style="display:flex;">
+    <div style="margin-right:100px">
+        <BicycleList Bicycle="_bicycles" />
+    </div>
+    <div style="width:300px">
+        <div>
 
-<BicycleList Bicycle="_bicycles" />
+            <div>
+                From:
+                <EditForm Model="@Filter">
+                    <InputDate @bind-Value="Filter.StartDate" />
+                </EditForm>
+            </div>
+            <div>
+                To:
+                <EditForm Model="@Filter">
+                    <InputDate @bind-Value="Filter.EndDate" />
+                </EditForm>
+            </div>
+            <br />
+            <input type="text" placeholder="Name" @bind="Filter.Name" />
+            <br />
+            <br />
+            <input type="text" placeholder="Marke" @bind="Filter.Marke" />
+            <br />
+            <br />
+            <input type="text" placeholder="Place" @bind="Filter.Place" />
+            <br />
+            <br />
+            <input type="text" placeholder="Region" @bind="Filter.Region" />
+            <br />
+            <br />
+            <input type="text" placeholder="Biketype" @bind="Filter.BikeType" />
+            <br />
+            <br />
+            <br />
+            <button @onclick="SearchButtonClicked">Search</button>
+        </div>
+    </div>
+</div>
+
 
 @code {
+
+    public BicycleFilter Filter { get; set; } = new BicycleFilter()
+        {
+            StartDate = DateTime.Now,
+            EndDate = DateTime.Now.AddDays(1)
+        };
+
     private List<Bicycle> _bicycles = new List<Bicycle>();
 
 
@@ -35,4 +83,10 @@ Welcome to your best and most liked bike rental place.
 
         return (tmpList).ToList();
     }
+
+    private void SearchButtonClicked()
+    {
+        var a = Filter;
+    }
+
 }

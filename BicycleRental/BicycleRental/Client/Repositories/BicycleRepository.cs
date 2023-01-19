@@ -45,5 +45,13 @@ namespace BicycleRental.Client.Repositories
             string requestUrl = "api/Bicycles";
             return await _httpClient.GetFromJsonAsync<Bicycle[]>(requestUrl, _jsonSerializerOptions);
         }
+
+        public async Task<Bicycle[]> Search(BicycleFilter filter)
+        {
+            string requestUrl = $"api/Bicycles/Search";
+
+            return await _httpClient.GetFromJsonAsync<Bicycle[]>(requestUrl, _jsonSerializerOptions);
+
+        }
     }
 }

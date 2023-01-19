@@ -1,15 +1,29 @@
 ﻿<AuthorizeView>
     <Authorized>
-        @*<a href="authentication/profile">Hello, @context.User.Identity?.Name!</a>
-        <button class="nav-link btn btn-link" @onclick="BeginLogOut">Log out</button>*@
-        <div>hello xyz</div>
+        <h4>
+
+            Hello, @authState.User.Claims.FirstOrDefault(x=>x.Type.Equals("preferred_username")).Value!
+            <a href="authentication/logout">logout</a>
+        </h4>
     </Authorized>
     <NotAuthorized>
-       @* <a href="authentication/register">Register</a>*@
-        <a href="authentication/login">Log in</a>
+        <h4>
+            <a href="authentication/login">Log in</a> to reservate a bicycle or <a href="authentication/register">Register</a> if you dont have an account yet.
+        </h4>
     </NotAuthorized>
 </AuthorizeView>
-
 @code {
+    private AuthenticationState authState = null;
 
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        authState = await authenticationStateTask;
+
+    }
 }

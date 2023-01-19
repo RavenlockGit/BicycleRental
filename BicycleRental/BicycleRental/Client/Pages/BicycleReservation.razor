@@ -15,37 +15,44 @@
     <div style="font-size:20px"><b>Region:</b> @_bicycle.Region</div>
     <br />
     <br />
-    <h3>Prize per Day: @_bicycle.PrizePerDay</h3>
+    <h3>Prize per Day: @_bicycle.PrizePerDay.ToString("C")</h3>
 </p>
 
 <h2>Reservation</h2>
 <div style="width:300px">
     <div>
-        <h3> Von:</h3>
+        <h3>From:</h3>
         <EditForm Model="@_reservation">
             <InputDate @bind-Value="_reservation.StartDate" />
         </EditForm>
     </div>
 
     <div>
-        <h3> Bis:</h3>
+        <h3>To:</h3>
         <EditForm Model="@_reservation">
             <InputDate @bind-Value="_reservation.EndDate" />
         </EditForm>
     </div>
 </div>
-
 <br />
 
-<button @onclick="ReservationButtonClicked">Reservate Bike</button>
+<AuthorizeView>
+    <Authorized>
+        <button @onclick="ReservationButtonClicked">Reservate Bike</button>
 
-<label style="color:red">@_errorMsg</label>
+        <label style="color:red">@_errorMsg</label>
 
-<h3>Current Reservations:</h3>
-@foreach (var a in _reservations)
-{
-    <h4>@a.StartDate.ToString("dd/MM/yyyy") - @a.EndDate.ToString("dd/MM/yyyy")</h4>
-}
+        <h3>Current Reservations:</h3>
+        @foreach (var a in _reservations)
+        {
+            <h4>@a.StartDate.ToString("dd/MM/yyyy") - @a.EndDate.ToString("dd/MM/yyyy")</h4>
+        }
+
+    </Authorized>
+    <NotAuthorized>
+        <a href="authentication/login">Log in</a> to reservate a bicycle or <a href="authentication/register">Register</a> if you dont have an account yet.
+    </NotAuthorized>
+</AuthorizeView>
 
 
 @code {
@@ -94,7 +101,7 @@
     {
         if (!CheckTimeSpanOverlap())
         {
-            _errorMsg = "Reservation dates overlap existing reservations!"; 
+            _errorMsg = "Reservation dates overlap existing reservations!";
             return;
         }
         if (!CheckTimeSpanOrder())

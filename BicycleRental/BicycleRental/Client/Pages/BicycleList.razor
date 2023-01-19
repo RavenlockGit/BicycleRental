@@ -1,20 +1,5 @@
 @using BicycleRental.Shared.Models;
 
-
-<AuthorizeView>
-    <Authorized>
-        Hello, @context.User.Identity?.Name !
-        @context.User.Identity?.AuthenticationType
-        @context.User.Identity?.IsAuthenticated
-        @context.User.Identity?.ToString()
-
-
-    </Authorized>
-    <NotAuthorized>
-        <a href="authentication/login">Log in</a>
-    </NotAuthorized>
-</AuthorizeView>
-
 @foreach (var bicycle in Bicycle)
 {
     <BicycleRow Bicycle="bicycle" />
@@ -24,6 +9,4 @@
 
     [Parameter]
     public List<Bicycle> Bicycle { get; set; }
-
-
 }
