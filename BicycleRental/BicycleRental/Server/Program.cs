@@ -1,4 +1,5 @@
 using BicycleRental.Server.Data;
+using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
 
 namespace BicycleRental
@@ -11,7 +12,7 @@ namespace BicycleRental
 
             // Add services to the container.
 
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews().AddOData();
             builder.Services.AddRazorPages();
 
             //todo remove
@@ -22,11 +23,17 @@ namespace BicycleRental
             //    File.Delete(dbName);
             //}
 
+            //Controllers including OData
+            builder.Services.AddControllers().AddOData(options =>
+            {
+                options.Select().Filter().OrderBy();
+            });
+
             builder.Services.AddDbContext<DataContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
-                    
+
 
             var app = builder.Build();
 

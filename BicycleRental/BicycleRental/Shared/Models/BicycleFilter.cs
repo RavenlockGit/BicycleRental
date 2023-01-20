@@ -12,7 +12,7 @@ namespace BicycleRental.Shared.Models
         public DateTime EndDate { get; set; } = DateTime.Now.AddDays(60);
 
         public string Name { get; set; } = string.Empty;
-        public string Marke { get; set; } = string.Empty;
+        public string Brand { get; set; } = string.Empty;
         public string Place { get; set; } = string.Empty;
         public string Region { get; set; } = string.Empty;
         public BikeType BikeType { get; set; }

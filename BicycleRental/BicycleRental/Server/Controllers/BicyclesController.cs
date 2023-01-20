@@ -1,7 +1,9 @@
 ﻿using BicycleRental.Server.Data;
 using BicycleRental.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Query;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace BicycleRental.Server.Controllers
 {
@@ -18,9 +20,54 @@ namespace BicycleRental.Server.Controllers
 
         // GET: Bicycles
         [HttpGet]
+        [EnableQuery]
         public async Task<IActionResult> Index()
         {
             return Ok(await _context.Bicycle.ToListAsync());
+        }
+
+        // GET: Bicycles
+        [HttpGet, Route("Search")]
+        [EnableQuery]
+        public async Task<IActionResult> Search(string StartDate, string EndDate)
+        {
+            var bikes = await _context.Bicycle.ToListAsync();
+            List<Bicycle> bikesToReturn = new List<Bicycle>();
+
+            DateTime start = DateTime.ParseExact(StartDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            DateTime end = DateTime.ParseExact(EndDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+
+            foreach (var bike in bikes)
+            {
+                if (await CheckTimeSpan(start, end, bike.Id))
+                {
+                    bikesToReturn.Add(bike);
+                }
+            }
+
+            return Ok(bikesToReturn);
+        }
+
+
+        private async Task<bool> CheckTimeSpan(DateTime startDate, DateTime endDate, int bicycleId)
+        {
+            Reservation tmpRes = new Reservation()
+            {
+                BicycleId= bicycleId,
+                StartDate = startDate,
+                EndDate = endDate
+            };
+            var allReservations = await _context.Reservation.Where(x => x.BicycleId == tmpRes.BicycleId).ToListAsync();
+            bool noOverlap = true;
+
+            foreach (var res in allReservations)
+            {
+                if (tmpRes.StartDate.Date <= res.EndDate.Date && res.StartDate.Date <= tmpRes.EndDate.Date)
+                {
+                    noOverlap = false;
+                }
+            }
+            return noOverlap;
         }
 
         // GET: Bicycles/Details/5

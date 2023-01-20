@@ -48,10 +48,14 @@ namespace BicycleRental.Client.Repositories
 
         public async Task<Bicycle[]> Search(BicycleFilter filter)
         {
-            string requestUrl = $"api/Bicycles/Search";
+            string requestUrl = $"api/Bicycles/Search?$filter=contains(Name, '{filter.Name}') " +
+                $"and contains(Brand, '{filter.Brand}') " +
+                $"and contains(Region, '{filter.Region}') " +
+                $"and contains(Place, '{filter.Place}')" +
+                $"&StartDate={filter.StartDate.ToString("dd/MM/yyyy")}" +
+                $"&EndDate={filter.EndDate.ToString("dd/MM/yyyy")}";
 
             return await _httpClient.GetFromJsonAsync<Bicycle[]>(requestUrl, _jsonSerializerOptions);
-
         }
     }
 }

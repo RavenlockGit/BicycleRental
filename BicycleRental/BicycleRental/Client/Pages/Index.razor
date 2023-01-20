@@ -10,10 +10,7 @@
 
 Welcome to your best and most liked bike rental place.
 <div style="display:flex;">
-    <div style="margin-right:100px">
-        <BicycleList Bicycle="_bicycles" />
-    </div>
-    <div style="width:300px">
+    <div >
         <div>
 
             <div>
@@ -32,7 +29,7 @@ Welcome to your best and most liked bike rental place.
             <input type="text" placeholder="Name" @bind="Filter.Name" />
             <br />
             <br />
-            <input type="text" placeholder="Marke" @bind="Filter.Marke" />
+            <input type="text" placeholder="Marke" @bind="Filter.Brand" />
             <br />
             <br />
             <input type="text" placeholder="Place" @bind="Filter.Place" />
@@ -48,6 +45,9 @@ Welcome to your best and most liked bike rental place.
             <button @onclick="SearchButtonClicked">Search</button>
         </div>
     </div>
+    <div style="margin-left:50px">
+        <BicycleList Bicycle="_bicycles" />
+    </div>
 </div>
 
 
@@ -55,8 +55,8 @@ Welcome to your best and most liked bike rental place.
 
     public BicycleFilter Filter { get; set; } = new BicycleFilter()
         {
-            StartDate = DateTime.Now,
-            EndDate = DateTime.Now.AddDays(1)
+            StartDate = DateTime.Now.AddDays(-5),
+            EndDate = DateTime.Now.AddDays(60)
         };
 
     private List<Bicycle> _bicycles = new List<Bicycle>();
@@ -84,9 +84,17 @@ Welcome to your best and most liked bike rental place.
         return (tmpList).ToList();
     }
 
-    private void SearchButtonClicked()
+    private async void SearchButtonClicked()
     {
-        var a = Filter;
+        var tmpList = await bicycleRepository.Search(Filter);
+        if (tmpList == null)
+        {
+            _bicycles = new List<Bicycle>();
+        }
+
+        _bicycles = (tmpList).ToList();
+
+        StateHasChanged();
     }
 
 }
