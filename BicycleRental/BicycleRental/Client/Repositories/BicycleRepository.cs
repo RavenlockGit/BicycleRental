@@ -51,7 +51,8 @@ namespace BicycleRental.Client.Repositories
             string requestUrl = $"api/Bicycles/Search?$filter=contains(Name, '{filter.Name}') " +
                 $"and contains(Brand, '{filter.Brand}') " +
                 $"and contains(Region, '{filter.Region}') " +
-                $"and contains(Place, '{filter.Place}')" +
+                $"and contains(Place, '{filter.Place}') " +
+                $"and Type eq '{filter.BikeType}'" +
                 $"&StartDate={filter.StartDate.ToString("dd/MM/yyyy")}" +
                 $"&EndDate={filter.EndDate.ToString("dd/MM/yyyy")}";
 

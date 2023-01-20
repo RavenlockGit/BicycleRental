@@ -48,12 +48,11 @@ namespace BicycleRental.Server.Controllers
             return Ok(bikesToReturn);
         }
 
-
         private async Task<bool> CheckTimeSpan(DateTime startDate, DateTime endDate, int bicycleId)
         {
             Reservation tmpRes = new Reservation()
             {
-                BicycleId= bicycleId,
+                BicycleId = bicycleId,
                 StartDate = startDate,
                 EndDate = endDate
             };

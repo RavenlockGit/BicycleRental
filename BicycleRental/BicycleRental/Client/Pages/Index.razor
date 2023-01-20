@@ -10,7 +10,7 @@
 
 Welcome to your best and most liked bike rental place.
 <div style="display:flex;">
-    <div >
+    <div>
         <div>
 
             <div>
@@ -38,7 +38,22 @@ Welcome to your best and most liked bike rental place.
             <input type="text" placeholder="Region" @bind="Filter.Region" />
             <br />
             <br />
-            <input type="text" placeholder="Biketype" @bind="Filter.BikeType" />
+            @*<input type="text" placeholder="Biketype" @bind="Filter.BikeType" />*@
+
+            @*<InputSelect @bind-Value="@Filter.BikeType">
+
+            @foreach (var type in Enum.GetValues(typeof(BikeType)))
+            {
+            <option value="@type">@type</option>
+            }
+            </InputSelect>*@
+
+            <select class="form-control" @onchange="@SelectBikeType">
+                @foreach (var type in Enum.GetValues(typeof(BikeType)))
+                {
+                    <option value="@type">@type</option>
+                }
+            </select>
             <br />
             <br />
             <br />
@@ -52,12 +67,8 @@ Welcome to your best and most liked bike rental place.
 
 
 @code {
-
-    public BicycleFilter Filter { get; set; } = new BicycleFilter()
-        {
-            StartDate = DateTime.Now.AddDays(-5),
-            EndDate = DateTime.Now.AddDays(60)
-        };
+    [CascadingParameter]
+    public BicycleFilter Filter { get; set; }
 
     private List<Bicycle> _bicycles = new List<Bicycle>();
 
@@ -69,6 +80,12 @@ Welcome to your best and most liked bike rental place.
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+
+        Filter = new BicycleFilter()
+            {
+                StartDate = DateTime.Now.AddDays(-5),
+                EndDate = DateTime.Now.AddDays(60)
+            };
 
         _bicycles = await InitBicycleList();
     }
@@ -97,4 +114,21 @@ Welcome to your best and most liked bike rental place.
         StateHasChanged();
     }
 
+    private void SelectBikeType(ChangeEventArgs e)
+    {
+        //var bPString = e.Value?.ToString();
+
+        BikeType bikeType;
+        if (Enum.TryParse<BikeType>(e.Value.ToString(), out bikeType))
+        {
+            Filter.BikeType = bikeType;
+
+        }
+
+        //if (string.IsNullOrEmpty(bPString)) return;
+
+        //Filter.BikeType = bluePrints.First(x => x.TypeID == Int32.Parse(e.Value.ToString()));
+        //BikeType a = (BikeType)Int32.Parse(e.Value.ToString());
+        //Filter.BikeType = a;
+    }
 }
