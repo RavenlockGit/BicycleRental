@@ -3,6 +3,10 @@
 @using BicycleRental.Shared.Models;
 
 <h2>@_bicycle.Name</h2>
+@if (@imageDataURL != null)
+{
+    <img src="@imageDataURL" />
+}
 <p>
     <label style="font-size:20px"><span style="font-weight:700">Brand:</span> @_bicycle.Brand</label>
     <br />
@@ -17,9 +21,23 @@
     <label style="font-size:20px"><span style="font-weight:700">TireSize:</span> @_bicycle.TireSize</label>
     <br />
     <br />
-    <h3>Prize per Day: @_bicycle.PrizePerDay</h3>
-</p>
+    <h3>Prize per Day: @_bicycle.PrizePerDay.ToString("C")</h3>
+    <br />
+    <br />
 
+    @if (@imageDataURL2 != null)
+    {
+        <img src="@imageDataURL2" />
+    }
+    @if (@imageDataURL3 != null)
+    {
+        <img src="@imageDataURL3" />
+    }
+    @if (@imageDataURL4 != null)
+    {
+        <img src="@imageDataURL4" />
+    }
+</p>
 
 @code {
     [Parameter]
@@ -31,10 +49,30 @@
     [Inject]
     private BicycleRepository _bicycleRepository { get; set; }
 
+    string imageDataURL;
+    string imageDataURL2;
+    string imageDataURL3;
+    string imageDataURL4;
+
+
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
 
         _bicycle = await _bicycleRepository.Details(int.Parse(BicycleId));
+
+        imageDataURL = LoadImage(_bicycle.FrontPicture);
+        imageDataURL2 = LoadImage(_bicycle.Picture2);
+        imageDataURL3 = LoadImage(_bicycle.Picture3);
+        imageDataURL4 = LoadImage(_bicycle.Picture4);
+    }
+    private string LoadImage(byte[] imgBytes)
+    {
+        if (imgBytes != null)
+        {
+            var imagesrc = Convert.ToBase64String(imgBytes);
+            return string.Format("data:image/jfif;base64,{0}", imagesrc);
+        }
+        return null;
     }
 }

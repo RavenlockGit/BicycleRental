@@ -1,24 +1,65 @@
 @using BicycleRental.Shared.Models;
 @inject NavigationManager NavigationManager
 
-<p>
-    <text>@Bicycle.Id - @Bicycle.Name (@(Bicycle.Brand))</text>
 
-    <button @onclick="DetailsButtonClicked">Details</button>
+<div style="display:flex; margin: 10px; border:solid; border-width:medium; padding:5px">
+    <p>
+        <text style="font-weight:700">Name: @Bicycle.Name</text>
+        <br />
+        <text>Place: @Bicycle.Place</text>
+        <br />
+        <text>Region: @Bicycle.Region</text>
+        <br />
+        <text style="font-size:larger">@Bicycle.PrizePerDay.ToString("C")</text>
+        <br /><br />
+        <EditForm Model="@Reservation">
+            <InputDate @bind-Value="Reservation.StartDate" />
+        </EditForm>
 
-    <AuthorizeView>
-        <Authorized>
-            <button @onclick="ReservateButtonClicked">Reservate</button>
-        </Authorized>
-    </AuthorizeView>
-</p>
+        <EditForm Model="@Reservation">
+            <InputDate @bind-Value="Reservation.EndDate" />
+        </EditForm>
 
+        <button @onclick="DetailsButtonClicked">Details</button>
+
+        <AuthorizeView>
+            <Authorized>
+                <button @onclick="ReservateButtonClicked">Reservate</button>
+            </Authorized>
+        </AuthorizeView>
+    </p>
+    @if (@imageDataURL != null)
+    {
+        <img src="@imageDataURL" style="margin: 10px; border:solid; border-width:medium" />
+    }
+</div>
+<br />
+<br />
 
 
 @code {
+    [Parameter]
+    public Bicycle Bicycle { get; set; } = new Bicycle();
 
     [Parameter]
-    public Bicycle Bicycle { get; set; }
+    public Reservation Reservation { get; set; }
+
+
+    string imageDataURL;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        imageDataURL = LoadImage(Bicycle.FrontPicture);
+
+        Reservation = new Reservation()
+            {
+                StartDate = DateTime.Now,
+                EndDate = DateTime.Now.AddDays(2)
+            };
+        StateHasChanged();
+    }
 
     private void DetailsButtonClicked(MouseEventArgs args)
     {
@@ -28,6 +69,15 @@
 
     private void ReservateButtonClicked(MouseEventArgs args)
     {
-        NavigationManager.NavigateTo($"/BicycleReservation/{Bicycle.Id}");
+        NavigationManager.NavigateTo($"/BicycleReservation/{Bicycle.Id}/{Reservation.StartDate.ToString("dd-MM-yyyy")}/{Reservation.EndDate.ToString("dd-MM-yyyy")}");
+    }
+    private string LoadImage(byte[] imgBytes)
+    {
+        if (imgBytes != null)
+        {
+            var imagesrc = Convert.ToBase64String(imgBytes);
+            return string.Format("data:image/jfif;base64,{0}", imagesrc);
+        }
+        return null;
     }
 }

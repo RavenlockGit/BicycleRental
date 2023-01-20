@@ -1,8 +1,9 @@
-@page "/BicycleReservation/{bicycleId}"
+@page "/BicycleReservation/{bicycleId}/{StartDate}/{EndDate}"
 @using BicycleRental.Client.Repositories;
 @using BicycleRental.Shared.Models;
 @using BlazorDateRangePicker
 @inject NavigationManager NavigationManager
+@using System.Globalization
 
 <h2>@_bicycle.Name</h2>
 <p>
@@ -59,13 +60,15 @@
     [Parameter]
     public string BicycleId { get; set; }
 
+    [Parameter]
+    public string StartDate { get; set; }
+
+    [Parameter]
+    public string EndDate { get; set; }
+
     private string _errorMsg = string.Empty;
 
-    public Reservation _reservation { get; set; } = new Reservation()
-        {
-            StartDate = DateTime.Now,
-            EndDate = DateTime.Now.AddDays(1)
-        };
+    public Reservation _reservation { get; set; }
 
     private Bicycle _bicycle = new Bicycle();
     private List<Reservation> _reservations = new();
@@ -80,6 +83,12 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+
+        _reservation = new Reservation()
+            {
+                StartDate = DateTime.ParseExact(StartDate, "dd-MM-yyyy", CultureInfo.InvariantCulture),
+                EndDate = DateTime.ParseExact(EndDate, "dd-MM-yyyy", CultureInfo.InvariantCulture),
+            };
 
         _bicycle = await _bicycleRepository.Details(int.Parse(BicycleId));
 

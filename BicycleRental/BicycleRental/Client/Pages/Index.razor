@@ -8,12 +8,13 @@
 
 <LoginComponent />
 
-Welcome to your best and most liked bike rental place.
+<h2 style="color:chartreuse">Welcome to your best and most liked bike rental place.</h2>
 <div style="display:flex;">
-    <div>
+    <div style="border:solid; border-width:medium; padding:5px">
         <div>
 
             <div>
+                <h5>Reservation:</h5>
                 From:
                 <EditForm Model="@Filter">
                     <InputDate @bind-Value="Filter.StartDate" />
@@ -38,16 +39,6 @@ Welcome to your best and most liked bike rental place.
             <input type="text" placeholder="Region" @bind="Filter.Region" />
             <br />
             <br />
-            @*<input type="text" placeholder="Biketype" @bind="Filter.BikeType" />*@
-
-            @*<InputSelect @bind-Value="@Filter.BikeType">
-
-            @foreach (var type in Enum.GetValues(typeof(BikeType)))
-            {
-            <option value="@type">@type</option>
-            }
-            </InputSelect>*@
-
             <select class="form-control" @onchange="@SelectBikeType">
                 @foreach (var type in Enum.GetValues(typeof(BikeType)))
                 {
@@ -116,19 +107,11 @@ Welcome to your best and most liked bike rental place.
 
     private void SelectBikeType(ChangeEventArgs e)
     {
-        //var bPString = e.Value?.ToString();
-
         BikeType bikeType;
         if (Enum.TryParse<BikeType>(e.Value.ToString(), out bikeType))
         {
             Filter.BikeType = bikeType;
 
         }
-
-        //if (string.IsNullOrEmpty(bPString)) return;
-
-        //Filter.BikeType = bluePrints.First(x => x.TypeID == Int32.Parse(e.Value.ToString()));
-        //BikeType a = (BikeType)Int32.Parse(e.Value.ToString());
-        //Filter.BikeType = a;
     }
 }

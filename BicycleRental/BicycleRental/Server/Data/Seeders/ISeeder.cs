@@ -1,4 +1,6 @@
-﻿namespace BicycleRental.Server.Data.Seeders
+﻿using BicycleRental.Shared.Models;
+
+namespace BicycleRental.Server.Data.Seeders
 {
     /// <summary>
     /// DB Seeder

@@ -48,6 +48,7 @@ namespace BicycleRental.Client.Repositories
 
         public async Task<Bicycle[]> Search(BicycleFilter filter)
         {
+            //Filtering is implemented using Odata
             string requestUrl = $"api/Bicycles/Search?$filter=contains(Name, '{filter.Name}') " +
                 $"and contains(Brand, '{filter.Brand}') " +
                 $"and contains(Region, '{filter.Region}') " +
